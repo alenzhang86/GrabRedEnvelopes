@@ -16,5 +16,6 @@ public class QHBActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         startActivity(intent);
+        this.finish();
     }
 }
