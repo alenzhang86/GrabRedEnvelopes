@@ -4,12 +4,16 @@ import android.accessibilityservice.AccessibilityService;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityWindowInfo;
+
+import com.handsome.boke2.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ import java.util.List;
 public class QHBAccessibilityService extends AccessibilityService {
 
     private List<AccessibilityNodeInfo> parents;
+    private SoundPool soundPool;
 
     /**
      * 当启动服务的时候就会被调用
@@ -31,6 +36,8 @@ public class QHBAccessibilityService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         parents = new ArrayList<>();
+        soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
+        soundPool.load(this, R.raw.luckymoney_sound, 1);
     }
 
     private void findAndPerformAction(String text) {
@@ -71,6 +78,7 @@ public class QHBAccessibilityService extends AccessibilityService {
                                 PendingIntent pendingIntent = notification.contentIntent;
                                 try {
                                     pendingIntent.send();
+                                    soundPool.play(1, 1, 1, 0, 0, 1);
                                     Log.e("demo", "进入微信");
                                 } catch (Exception e) {
                                     e.printStackTrace();
