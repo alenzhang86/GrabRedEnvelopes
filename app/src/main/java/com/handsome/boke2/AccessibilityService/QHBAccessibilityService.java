@@ -1,7 +1,6 @@
 package com.handsome.boke2.AccessibilityService;
 
 import android.accessibilityservice.AccessibilityService;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -10,6 +9,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityWindowInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,23 +92,26 @@ public class QHBAccessibilityService extends AccessibilityService {
                 String className = event.getClassName().toString();
 //                Log.e("className", className);
                 switch (className) {
-                    case "com.tencent.mm.ui.LauncherUI":
+                   /* case "com.tencent.mm.ui.LauncherUI":
                         //点击最后一个红包
                         Log.e("demo", "点击红包");
                         getLastPacket();
-                        break;
+                        break;*/
                     case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI":
                         //开红包
                         Log.e("demo", "开红包");
                         for (int i = 0; i < 3; i++) {
-                            SystemClock.sleep(200L);
-                            inputClick("com.tencent.mm:id/bdh");
+                            SystemClock.sleep(300L);
+//                            inputClick("com.tencent.mm:id/bdh");
+                            inputClick("com.tencent.mm:id/bi3");
                         }
+//                        inputClick("com.tencent.mm:id/bi3");
                         break;
                     case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI":
                         //退出红包
                         Log.e("demo", "退出红包");
-                        inputClick("com.tencent.mm:id/gp");
+//                        inputClick("com.tencent.mm:id/gp");
+                        inputClick("com.tencent.mm:id/gv");
                         break;
 
                 }
@@ -121,14 +124,35 @@ public class QHBAccessibilityService extends AccessibilityService {
      *
      * @param clickId
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void inputClick(String clickId) {
+//        SystemClock.sleep(400L);
+//        List<AccessibilityWindowInfo> accessibilityWindowInfos=getWindows();
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(clickId);
             for (AccessibilityNodeInfo item : list) {
                 item.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
+        } else {
+            Log.w("OpenFailed", "红包打开失败");
+        }
+    }
+
+    /**
+     * 通过ID获取控件，并进行模拟点击
+     *
+     * @param clickId
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void inputClick2(String clickId, AccessibilityNodeInfo nodeInfo) {
+        if (nodeInfo != null) {
+            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId(clickId);
+            for (AccessibilityNodeInfo item : list) {
+                item.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        } else {
+            Log.w("OpenFailed", "红包打开失败");
         }
     }
 
@@ -181,6 +205,7 @@ public class QHBAccessibilityService extends AccessibilityService {
             }
         }
     }
+
     public void recycleList(AccessibilityNodeInfo info) {
         if (info.getChildCount() == 0) {
             if (info.getText() != null) {
