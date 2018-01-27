@@ -7,11 +7,9 @@ import android.app.PendingIntent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.accessibility.AccessibilityWindowInfo;
 
 import com.handsome.boke2.R;
 
@@ -63,6 +61,7 @@ public class QHBAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int eventType = event.getEventType();
+//        Log.e("eventType=",eventType+"");
         switch (eventType) {
             //当通知栏发生改变时
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
@@ -88,38 +87,31 @@ public class QHBAccessibilityService extends AccessibilityService {
                     }
                 }
                 break;
-           /* case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
-                getFirstPacket();
-               *//* Log.e("className", "TYPE_WINDOW_CONTENT_CHANGED:" + event.getClassName().toString());
-                if (event.getSource() != null) {
-                    findAndPerformAction("苏丹");
-                }*//*
-                break;*/
+            case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
+                getLastPacket();
+                break;
             //当窗口的状态发生改变时
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 String className = event.getClassName().toString();
-//                Log.e("className", className);
+                Log.e("className", className);
                 switch (className) {
-                   /* case "com.tencent.mm.ui.LauncherUI":
+                    case "com.tencent.mm.ui.LauncherUI":
                         //点击最后一个红包
-                        Log.e("demo", "点击红包");
+//                        Log.e("demo", "点击红包");
                         getLastPacket();
-                        break;*/
+                        break;
                     case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI":
                         //开红包
-                        Log.e("demo", "开红包");
-                        for (int i = 0; i < 3; i++) {
-                            SystemClock.sleep(300L);
+//                        Log.e("demo", "开红包");
 //                            inputClick("com.tencent.mm:id/bdh");
-                            inputClick("com.tencent.mm:id/bi3");
-                        }
+                            inputClick("com.tencent.mm:id/c2i");
 //                        inputClick("com.tencent.mm:id/bi3");
                         break;
                     case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI":
                         //退出红包
-                        Log.e("demo", "退出红包");
+//                        Log.e("demo", "退出红包");
 //                        inputClick("com.tencent.mm:id/gp");
-                        inputClick("com.tencent.mm:id/gv");
+                        inputClick("com.tencent.mm:id/ho");
                         break;
 
                 }
@@ -168,6 +160,7 @@ public class QHBAccessibilityService extends AccessibilityService {
      * 获取List中最后一个红包，并进行模拟点击
      */
     private void getLastPacket() {
+        parents=new ArrayList<>();
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         recycle(rootNode);
         if (parents.size() > 0) {
@@ -189,10 +182,11 @@ public class QHBAccessibilityService extends AccessibilityService {
      * @param info
      */
     public void recycle(AccessibilityNodeInfo info) {
-        if (info.getChildCount() == 0) {
+        if (info!=null&&info.getChildCount() == 0) {
             if (info.getText() != null) {
                 if ("领取红包".equals(info.getText().toString())) {
                     if (info.isClickable()) {
+//                        parents.add(info.getParent());
                         info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     }
                     AccessibilityNodeInfo parent = info.getParent();
@@ -206,9 +200,11 @@ public class QHBAccessibilityService extends AccessibilityService {
                 }
             }
         } else {
-            for (int i = 0; i < info.getChildCount(); i++) {
-                if (info.getChild(i) != null) {
-                    recycle(info.getChild(i));
+            if(info!=null) {
+                for (int i = 0; i < info.getChildCount(); i++) {
+                    if (info.getChild(i) != null) {
+                        recycle(info.getChild(i));
+                    }
                 }
             }
         }
