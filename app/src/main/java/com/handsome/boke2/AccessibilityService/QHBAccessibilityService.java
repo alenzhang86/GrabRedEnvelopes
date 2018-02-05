@@ -104,14 +104,14 @@ public class QHBAccessibilityService extends AccessibilityService {
                         //开红包
 //                        Log.e("demo", "开红包");
 //                            inputClick("com.tencent.mm:id/bdh");
-                            inputClick("com.tencent.mm:id/c2i");
+                            inputClick("com.tencent.mm:id/c4j");
 //                        inputClick("com.tencent.mm:id/bi3");
                         break;
                     case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI":
                         //退出红包
 //                        Log.e("demo", "退出红包");
 //                        inputClick("com.tencent.mm:id/gp");
-                        inputClick("com.tencent.mm:id/ho");
+                        inputClick("com.tencent.mm:id/hx");
                         break;
 
                 }
